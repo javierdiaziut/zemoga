@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
     id("dagger.hilt.android.plugin")
     id("kotlin-kapt")
@@ -9,7 +9,6 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.networking"
         minSdk 24
         targetSdk 31
         versionCode 1
@@ -46,11 +45,15 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:2.38.1"
 
     //Network
-    api "com.squareup.retrofit2:retrofit:2.9.0"
-    api "com.squareup.okhttp3:okhttp:5.0.0-alpha.2"
-    api "com.google.code.gson:gson:2.8.7"
-    api "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2"
-    api "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.2"
+    implementation "com.google.code.gson:gson:2.8.7"
+    implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
+
+
 
     implementation project(':domain')
 }
