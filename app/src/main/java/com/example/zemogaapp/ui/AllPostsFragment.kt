@@ -8,17 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.databasezemoga.entity.PostEntity
+import com.example.domain.PostItem
 import com.example.domain.PostResponse
+import com.example.domain.toUI
 import com.example.networking.utils.Result
 import com.example.zemogaapp.BaseActivity
 import com.example.zemogaapp.R
 import com.example.zemogaapp.databinding.FragmentAllPostsBinding
 import com.example.zemogaapp.ui.adapter.RecyclerItemsAdapter
+import com.example.zemogaapp.view_model.LocalStorageViewModel
 import com.example.zemogaapp.view_model.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 
 @AndroidEntryPoint
 class AllPostsFragment : Fragment() {
@@ -26,7 +33,8 @@ class AllPostsFragment : Fragment() {
     private var _binding: FragmentAllPostsBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MainActivityViewModel by viewModels()
-    private var postsItems: List<PostResponse> = arrayListOf()
+    private val localViewModel: LocalStorageViewModel by viewModels()
+    private var postsItems: List<PostItem> = listOf()
     private lateinit var adapter: RecyclerItemsAdapter
 
 
@@ -44,7 +52,17 @@ class AllPostsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getPosts()
+        localViewModel.getLocalPosts()
+        localViewModel.localItems.observe(this, Observer {data ->
+            (activity as BaseActivity).dismissLoading()
+            postsItems = data.map { it.toUI() }
+            if (postsItems.isNotEmpty()){
+                setupAdapter(postsItems)
+            }else{
+                viewModel.getPosts()
+            }
+        })
+
         viewModel.responseUi.observe(this, {
             handleResult(it)
         })
@@ -54,8 +72,11 @@ class AllPostsFragment : Fragment() {
         result?.let {
             when (result) {
                 is Result.Success -> {
-                    postsItems = result.data
-                    setupAdapter(ArrayList(postsItems))
+                    val dataResponse = result.data
+                    postsItems = dataResponse.map { it.toUI() }
+                    setFirstTwentyPostsAsUnRead()
+                    setupAdapter(postsItems)
+                    insertAllItemsInDb(postsItems)
                     (activity as BaseActivity).dismissLoading()
                 }
                 is Result.Failure -> {
@@ -71,7 +92,23 @@ class AllPostsFragment : Fragment() {
 
     }
 
-    private fun setupAdapter(items: ArrayList<PostResponse>) {
+    private fun insertAllItemsInDb(data : List<PostItem>){
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch {
+            localViewModel.insertAllPosts(data)
+        }
+    }
+
+    private fun setFirstTwentyPostsAsUnRead(){
+        if(postsItems.size > 20){
+            for (i in 0 .. 19 ) {
+                postsItems[i].isRead = false
+                postsItems[i].isFavorite = true
+            }
+        }
+    }
+
+    private fun setupAdapter(items: List<PostItem>) {
         adapter = RecyclerItemsAdapter(requireContext(), items)
         binding.recyclerAllPosts.addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
         binding.recyclerAllPosts.layoutManager =

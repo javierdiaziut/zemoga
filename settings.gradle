@@ -10,3 +10,4 @@ rootProject.name = "Zemoga App"
 include ':app'
 include ':domain'
 include ':networking'
+include ':databasezemoga'

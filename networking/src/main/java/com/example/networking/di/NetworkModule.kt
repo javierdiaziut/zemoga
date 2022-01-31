@@ -1,6 +1,8 @@
 package com.example.networking.di
 
 import android.content.Context
+import androidx.room.Room
+import com.example.databasezemoga.db.AppDatabase
 import com.example.networking.utils.DefaultDispatcherProvider
 import com.example.networking.utils.DispatcherProvider
 import dagger.Module
@@ -14,6 +16,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -76,5 +79,15 @@ class NetworkModule {
     @Provides
     fun provideDispatcherProvider(): DispatcherProvider {
         return DefaultDispatcherProvider()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
+        return Room.databaseBuilder(
+            appContext,
+            AppDatabase::class.java,
+            "app_db.db"
+        ).allowMainThreadQueries().build()
     }
 }

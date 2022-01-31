@@ -1,5 +1,7 @@
 package com.example.networking.di
 
+import com.example.databasezemoga.dao.PostDao
+import com.example.databasezemoga.db.AppDatabase
 import com.example.networking.datasource.GetPostsDataSource
 import com.example.networking.repository.GetPostRepository
 import com.example.networking.utils.DispatcherProvider
@@ -23,5 +25,10 @@ object RepositoryModule {
             apiMethods,
             dispatcherProvider
         )
+    }
+
+    @Provides
+    fun provideChannelDao(appDatabase: AppDatabase): PostDao {
+        return appDatabase.postDao()
     }
 }

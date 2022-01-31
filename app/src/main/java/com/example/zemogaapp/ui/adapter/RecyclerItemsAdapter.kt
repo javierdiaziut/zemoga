@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.domain.PostItem
 import com.example.domain.PostResponse
 import com.example.zemogaapp.databinding.LayoutItemRecyclerBinding
 
-class RecyclerItemsAdapter(val context: Context, var items: ArrayList<PostResponse>) :
-    ListAdapter<PostResponse, RecyclerView.ViewHolder>(UserDiffCallBack()) {
+class RecyclerItemsAdapter(val context: Context, var items: List<PostItem>) :
+    ListAdapter<PostItem, RecyclerView.ViewHolder>(UserDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolderItem(
@@ -38,6 +39,18 @@ class RecyclerItemsAdapter(val context: Context, var items: ArrayList<PostRespon
 
         fun bind(position: Int) {
             binding.textPostDescription.text = items[position].title
+
+            if(items[position].isRead){
+                binding.dotUnreadPost.visibility = View.GONE
+            }else {
+                binding.dotUnreadPost.visibility = View.VISIBLE
+            }
+
+            if(items[position].isFavorite){
+                binding.imageFavorite.visibility = View.VISIBLE
+            }else {
+                binding.imageFavorite.visibility = View.GONE
+            }
         }
 
         override fun onClick(view: View) {
@@ -45,11 +58,11 @@ class RecyclerItemsAdapter(val context: Context, var items: ArrayList<PostRespon
         }
     }
 
-    private class UserDiffCallBack : DiffUtil.ItemCallback<PostResponse>() {
-        override fun areItemsTheSame(oldItem: PostResponse, newItem: PostResponse): Boolean =
+    private class UserDiffCallBack : DiffUtil.ItemCallback<PostItem>() {
+        override fun areItemsTheSame(oldItem: PostItem, newItem: PostItem): Boolean =
             oldItem == newItem
 
-        override fun areContentsTheSame(oldItem: PostResponse, newItem: PostResponse): Boolean =
+        override fun areContentsTheSame(oldItem: PostItem, newItem: PostItem): Boolean =
             oldItem == newItem
     }
 }
