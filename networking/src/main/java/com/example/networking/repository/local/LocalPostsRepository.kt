@@ -16,9 +16,13 @@ class LocalPostsRepository @Inject constructor(private val appDatabase: AppDatab
             .insertAllPosts(list)
     }
 
-//    suspend fun delete(article: Article) {
-//        appDatabase.articleDao().delete(convertArticleModelToArticleEntity(article))
-//    }
+    suspend fun deletePost(item: PostEntity) {
+        appDatabase.postDao().deletePost(item)
+    }
+
+    suspend fun updatePost(item: PostEntity) {
+        appDatabase.postDao().updatePost(item)
+    }
 
     fun getAllPosts(): Flow<List<PostEntity>> {
         return appDatabase.postDao().getAllPost()

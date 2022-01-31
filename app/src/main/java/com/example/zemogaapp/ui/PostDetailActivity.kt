@@ -1,6 +1,7 @@
 package com.example.zemogaapp.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +12,7 @@ import com.example.zemogaapp.R
 import com.example.zemogaapp.databinding.ActivityPostDetailBinding
 import com.example.zemogaapp.ui.adapter.RecyclerCommentsAdapter
 import com.example.zemogaapp.view_model.DetailPostViewModel
+import com.example.zemogaapp.view_model.LocalStorageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 const val CURRENT_POST = "currentItem"
@@ -20,9 +22,9 @@ class PostDetailActivity : BaseActivity() {
 
     private var currentPost : PostItem? = null
     private val viewModel: DetailPostViewModel by viewModels()
+    private val localViewModel: LocalStorageViewModel by viewModels()
     private var commentsItems: List<PostComment> = listOf()
     private lateinit var adapter: RecyclerCommentsAdapter
-
     private lateinit var binding: ActivityPostDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,10 +33,16 @@ class PostDetailActivity : BaseActivity() {
         val view = binding.root
         setContentView(view)
         currentPost = intent?.getParcelableExtra(CURRENT_POST)
-        initViews()
         currentPost?.let {
             viewModel.getPostComments(it.id)
             viewModel.getUserInfo(it.userId)
+            initViews(it)
+            if(it.isFavorite){
+                binding.includedToolbar.icActionToolbar.setImageResource(R.drawable.ic_star)
+            }else{
+                binding.includedToolbar.icActionToolbar.setImageResource(R.drawable.ic_empty_star_border_24)
+            }
+
         }
 
         viewModel.responseUi.observe(this, {
@@ -122,7 +130,20 @@ class PostDetailActivity : BaseActivity() {
         binding.recyclerAllComments.adapter = adapter
     }
 
-    private fun initViews(){
-        binding.textDescription.text = currentPost?.body
+    private fun initViews(currentPost : PostItem){
+        binding.textDescription.text = currentPost.body
+        binding.includedToolbar.labelToolbarTitle.text = getString(R.string.label_detail_title)
+        binding.includedToolbar.icActionToolbar.setOnClickListener {
+            currentPost.isFavorite = !currentPost.isFavorite
+            if(currentPost.isFavorite){
+                binding.includedToolbar.icActionToolbar.setImageResource(R.drawable.ic_star)
+                Toast.makeText(this,getString(R.string.label_added_to_favorites), Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(this,getString(R.string.label_removed_from_favorites), Toast.LENGTH_SHORT).show()
+                binding.includedToolbar.icActionToolbar.setImageResource(R.drawable.ic_empty_star_border_24)
+            }
+            localViewModel.updatePosts(currentPost.toEntity())
+        }
+
     }
 }

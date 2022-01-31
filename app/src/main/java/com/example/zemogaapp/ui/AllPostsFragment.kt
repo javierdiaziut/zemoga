@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.databasezemoga.entity.PostEntity
 import com.example.domain.PostItem
 import com.example.domain.PostResponse
+import com.example.domain.toEntity
 import com.example.domain.toUI
 import com.example.networking.utils.Result
 import com.example.zemogaapp.BaseActivity
@@ -68,6 +69,12 @@ class AllPostsFragment : Fragment(), RecyclerItemsAdapter.PostClickListener {
         viewModel.responseUi.observe(this, {
             handleResult(it)
         })
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).showReloadToolbar { viewModel.getPosts() }
     }
 
     private fun handleResult(result: Result<List<PostResponse>>?) {
@@ -105,7 +112,6 @@ class AllPostsFragment : Fragment(), RecyclerItemsAdapter.PostClickListener {
         if(postsItems.size > 20){
             for (i in 0 .. 19 ) {
                 postsItems[i].isRead = false
-                postsItems[i].isFavorite = true
             }
         }
     }
@@ -120,7 +126,9 @@ class AllPostsFragment : Fragment(), RecyclerItemsAdapter.PostClickListener {
     }
 
     override fun onPostItemClick(item: PostItem) {
-//        val bundle = bundleOf("amount" to amount)
+        item.isRead = true
+        val readPost = item.toEntity()
+        localViewModel.updatePosts(readPost)
         findNavController().navigate(AllPostsFragmentDirections.actionAllPostsFragmentToPostDetailActivity(item))
     }
 

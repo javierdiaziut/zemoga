@@ -2,6 +2,7 @@ package com.example.zemogaapp.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.navigation.findNavController
 import com.example.domain.PostResponse
 import com.example.networking.utils.Result
@@ -24,6 +25,24 @@ class MainActivity : BaseActivity() {
         setContentView(view)
 
         handleTabListeners()
+        initToolbar()
+    }
+
+    private fun initToolbar(){
+        binding.includedToolbar.labelToolbarTitle.text = getText(R.string.label_home_title)
+        binding.includedToolbar.icActionToolbar.setImageResource(R.drawable.ic_download_data)
+
+    }
+
+    fun showReloadToolbar(getNewData: () -> (Unit)){
+        binding.includedToolbar.icActionToolbar.visibility = View.VISIBLE
+        binding.includedToolbar.icActionToolbar.setOnClickListener {
+            getNewData()
+        }
+    }
+
+    fun hideReloadToolbar() {
+        binding.includedToolbar.icActionToolbar.visibility = View.GONE
     }
 
     private fun handleTabListeners(){

@@ -13,14 +13,14 @@ interface PostDao {
     @Query("SELECT * FROM post_table WHERE isFavorite = :isFavorite")
     fun getAllFavoritePost(isFavorite : Boolean): Flow<List<PostEntity>>
 
-    @Insert
-    fun insertPost(post: PostEntity)
-
     @Update
     suspend fun updatePost(item: PostEntity)
 
     @Query("DELETE FROM post_table")
     fun deleteAllPosts()
+
+    @Delete
+    suspend fun deletePost(item: PostEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllPosts(allPosts: List<PostEntity>)

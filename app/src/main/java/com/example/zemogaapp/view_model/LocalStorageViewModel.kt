@@ -40,4 +40,10 @@ class LocalStorageViewModel @Inject constructor(private val dbRepository: LocalP
         }
     }
 
+    fun updatePosts(post: PostEntity) {
+        viewModelScope.launch {
+            dbRepository.updatePost(post)
+        }
+    }
+
 }
