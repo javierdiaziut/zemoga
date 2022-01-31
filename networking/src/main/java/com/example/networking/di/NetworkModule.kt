@@ -88,6 +88,6 @@ class NetworkModule {
             appContext,
             AppDatabase::class.java,
             "app_db.db"
-        ).allowMainThreadQueries().build()
+        ).build()
     }
 }

@@ -6,10 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 
 @AndroidEntryPoint
-class AllPostsFragment : Fragment() {
+class AllPostsFragment : Fragment(), RecyclerItemsAdapter.PostClickListener {
 
     private var _binding: FragmentAllPostsBinding? = null
     private val binding get() = _binding!!
@@ -110,10 +112,16 @@ class AllPostsFragment : Fragment() {
 
     private fun setupAdapter(items: List<PostItem>) {
         adapter = RecyclerItemsAdapter(requireContext(), items)
+        adapter.setClickListener(this)
         binding.recyclerAllPosts.addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
         binding.recyclerAllPosts.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerAllPosts.adapter = adapter
+    }
+
+    override fun onPostItemClick(item: PostItem) {
+//        val bundle = bundleOf("amount" to amount)
+        findNavController().navigate(AllPostsFragmentDirections.actionAllPostsFragmentToPostDetailActivity(item))
     }
 
     companion object {

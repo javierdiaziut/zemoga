@@ -9,10 +9,27 @@
         android:id="@+id/allPostsFragment"
         android:name="com.example.zemogaapp.ui.AllPostsFragment"
         android:label="fragment_all_posts"
-        tools:layout="@layout/fragment_all_posts" />
+        tools:layout="@layout/fragment_all_posts" >
+        <action
+            android:id="@+id/action_allPostsFragment_to_postDetailActivity"
+            app:destination="@id/postDetailActivity" />
+    </fragment>
     <fragment
         android:id="@+id/favoritePostsFragment"
         android:name="com.example.zemogaapp.ui.FavoritePostsFragment"
         android:label="fragment_favorite_posts"
-        tools:layout="@layout/fragment_favorite_posts" />
+        tools:layout="@layout/fragment_favorite_posts" >
+        <action
+            android:id="@+id/action_favoritePostsFragment_to_postDetailActivity"
+            app:destination="@id/postDetailActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/postDetailActivity"
+        android:name="com.example.zemogaapp.ui.PostDetailActivity"
+        android:label="activity_post_detail"
+        tools:layout="@layout/activity_post_detail" >
+        <argument
+            android:name="currentItem"
+            app:argType="com.example.domain.PostItem" />
+    </activity>
 </navigation>

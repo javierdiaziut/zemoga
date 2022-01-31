@@ -5,10 +5,12 @@
       <map>
         <entry key="..\:/Users/Javier/AndroidStudioProjects/ZemogaApp/app/src/main/res/drawable/layout_dot_unread_post.xml" value="0.10925925925925926" />
         <entry key="..\:/Users/Javier/AndroidStudioProjects/ZemogaApp/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/Javier/AndroidStudioProjects/ZemogaApp/app/src/main/res/layout/activity_post_detail.xml" value="0.22" />
         <entry key="..\:/Users/Javier/AndroidStudioProjects/ZemogaApp/app/src/main/res/layout/custom_progress_dialog.xml" value="0.1408514492753623" />
         <entry key="..\:/Users/Javier/AndroidStudioProjects/ZemogaApp/app/src/main/res/layout/fragment_all_posts.xml" value="0.33" />
         <entry key="..\:/Users/Javier/AndroidStudioProjects/ZemogaApp/app/src/main/res/layout/fragment_favorite_posts.xml" value="0.1286727456940223" />
         <entry key="..\:/Users/Javier/AndroidStudioProjects/ZemogaApp/app/src/main/res/layout/layout_item_recycler.xml" value="0.25" />
+        <entry key="..\:/Users/Javier/AndroidStudioProjects/ZemogaApp/app/src/main/res/layout/layout_item_recycler_comments.xml" value="0.33" />
       </map>
     </option>
   </component>

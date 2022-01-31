@@ -1,6 +1,9 @@
 package com.example.networking.di
 
+import com.example.networking.datasource.GetPostCommentsDataSource
 import com.example.networking.datasource.GetPostsDataSource
+import com.example.networking.usecase.GetPostCommentsInteractor
+import com.example.networking.usecase.GetPostCommentsUseCase
 import com.example.networking.usecase.GetPostInteractor
 import com.example.networking.usecase.GetPostsUseCase
 import dagger.Module
@@ -18,5 +21,11 @@ object UseCaseModule {
     @ViewModelScoped
     fun provideGetPostsUseCase(dataSource: GetPostsDataSource): GetPostsUseCase {
         return GetPostInteractor(dataSource)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetPostCommentsUseCase(dataSource: GetPostCommentsDataSource): GetPostCommentsUseCase {
+        return GetPostCommentsInteractor(dataSource)
     }
 }

@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">Zemoga App</string>
 
-    //Main activity
+    <!--    Main activity-->
     <string name="label_tab_all_post">All</string>
     <string name="label_tab_favorite_post">Favorites</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!--    Detail Activity-->
+    <string name="label_description">Description</string>
+    <string name="label_user">User</string>
+    <string name="label_comments">Comments</string>
 </resources>

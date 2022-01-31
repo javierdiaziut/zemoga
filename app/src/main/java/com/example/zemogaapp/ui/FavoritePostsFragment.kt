@@ -21,7 +21,7 @@ import com.example.zemogaapp.view_model.LocalStorageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FavoritePostsFragment : Fragment() {
+class FavoritePostsFragment : Fragment(), RecyclerItemsAdapter.PostClickListener {
 
     private var _binding: FragmentFavoritePostsBinding? = null
     private val binding get() = _binding!!
@@ -58,6 +58,10 @@ class FavoritePostsFragment : Fragment() {
         binding.recyclerFavoritesPosts.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerFavoritesPosts.adapter = adapter
+    }
+
+    override fun onPostItemClick(item: PostItem) {
+
     }
 
     companion object {

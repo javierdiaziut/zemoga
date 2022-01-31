@@ -2,7 +2,9 @@ package com.example.networking.di
 
 import com.example.databasezemoga.dao.PostDao
 import com.example.databasezemoga.db.AppDatabase
+import com.example.networking.datasource.GetPostCommentsDataSource
 import com.example.networking.datasource.GetPostsDataSource
+import com.example.networking.repository.GetPostCommentsRepository
 import com.example.networking.repository.GetPostRepository
 import com.example.networking.utils.DispatcherProvider
 import dagger.Module
@@ -22,6 +24,18 @@ object RepositoryModule {
         dispatcherProvider: DispatcherProvider
     ): GetPostsDataSource {
         return GetPostRepository(
+            apiMethods,
+            dispatcherProvider
+        )
+    }
+
+    @Provides
+    fun provideGetPosCommentsRepository(
+        @ApiMethodsFingerprint
+        apiMethods: ApiMethods,
+        dispatcherProvider: DispatcherProvider
+    ): GetPostCommentsDataSource {
+        return GetPostCommentsRepository(
             apiMethods,
             dispatcherProvider
         )

@@ -1,8 +1,10 @@
 package com.example.domain
 
+import android.os.Parcelable
 import com.example.databasezemoga.entity.PostEntity
+import kotlinx.android.parcel.Parcelize
 
-
+@Parcelize
 data class PostItem(
     val id: Int,
     val userId: Int,
@@ -10,7 +12,7 @@ data class PostItem(
     val body: String,
     var isFavorite: Boolean,
     var isRead: Boolean
-)
+) : Parcelable
 
 fun PostItem.toEntity() = PostEntity(
     id = id,

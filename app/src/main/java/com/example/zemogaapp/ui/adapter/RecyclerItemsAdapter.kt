@@ -11,8 +11,10 @@ import com.example.domain.PostItem
 import com.example.domain.PostResponse
 import com.example.zemogaapp.databinding.LayoutItemRecyclerBinding
 
-class RecyclerItemsAdapter(val context: Context, var items: List<PostItem>) :
+class RecyclerItemsAdapter(private val context: Context, var items: List<PostItem>) :
     ListAdapter<PostItem, RecyclerView.ViewHolder>(UserDiffCallBack()) {
+
+    private var clickListener: PostClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolderItem(
@@ -23,6 +25,9 @@ class RecyclerItemsAdapter(val context: Context, var items: List<PostItem>) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ViewHolderItem).bind(position)
+        holder.itemView.setOnClickListener {
+            clickListener?.onPostItemClick(items[position])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -30,12 +35,7 @@ class RecyclerItemsAdapter(val context: Context, var items: List<PostItem>) :
     }
 
     inner class ViewHolderItem internal constructor(val binding: LayoutItemRecyclerBinding) :
-        RecyclerView.ViewHolder(binding.root),
-        View.OnClickListener {
-
-        init {
-            itemView.setOnClickListener(this)
-        }
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
             binding.textPostDescription.text = items[position].title
@@ -53,9 +53,6 @@ class RecyclerItemsAdapter(val context: Context, var items: List<PostItem>) :
             }
         }
 
-        override fun onClick(view: View) {
-
-        }
     }
 
     private class UserDiffCallBack : DiffUtil.ItemCallback<PostItem>() {
@@ -64,5 +61,13 @@ class RecyclerItemsAdapter(val context: Context, var items: List<PostItem>) :
 
         override fun areContentsTheSame(oldItem: PostItem, newItem: PostItem): Boolean =
             oldItem == newItem
+    }
+
+    interface PostClickListener {
+        fun onPostItemClick(item : PostItem)
+    }
+
+    internal fun setClickListener(clickListener: PostClickListener) {
+        this.clickListener = clickListener
     }
 }

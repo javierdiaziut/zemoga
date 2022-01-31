@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.example.zemogaapp.utils.ProgressDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 open class BaseActivity : AppCompatActivity() {
     private val progressDialogFragment = ProgressDialogFragment.newInstance()
 
