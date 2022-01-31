@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/allPostsFragment">
+
+    <fragment
+        android:id="@+id/allPostsFragment"
+        android:name="com.example.zemogaapp.ui.AllPostsFragment"
+        android:label="fragment_all_posts"
+        tools:layout="@layout/fragment_all_posts" />
+    <fragment
+        android:id="@+id/favoritePostsFragment"
+        android:name="com.example.zemogaapp.ui.FavoritePostsFragment"
+        android:label="fragment_favorite_posts"
+        tools:layout="@layout/fragment_favorite_posts" />
+</navigation>

@@ -1,0 +1,88 @@
+package com.example.zemogaapp.ui
+
+import android.os.Bundle
+import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.domain.PostResponse
+import com.example.networking.utils.Result
+import com.example.zemogaapp.BaseActivity
+import com.example.zemogaapp.R
+import com.example.zemogaapp.databinding.FragmentAllPostsBinding
+import com.example.zemogaapp.ui.adapter.RecyclerItemsAdapter
+import com.example.zemogaapp.view_model.MainActivityViewModel
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class AllPostsFragment : Fragment() {
+
+    private var _binding: FragmentAllPostsBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: MainActivityViewModel by viewModels()
+    private var postsItems: List<PostResponse> = arrayListOf()
+    private lateinit var adapter: RecyclerItemsAdapter
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAllPostsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getPosts()
+        viewModel.responseUi.observe(this, {
+            handleResult(it)
+        })
+    }
+
+    private fun handleResult(result: Result<List<PostResponse>>?) {
+        result?.let {
+            when (result) {
+                is Result.Success -> {
+                    postsItems = result.data
+                    setupAdapter(ArrayList(postsItems))
+                    (activity as BaseActivity).dismissLoading()
+                }
+                is Result.Failure -> {
+                    Log.i("Error", "Error")
+                    (activity as BaseActivity).dismissLoading()
+                }
+                is Result.Loading -> {
+                    Log.i("Loading", "Loading")
+                    (activity as BaseActivity).showLoading()
+                }
+            }
+        }
+
+    }
+
+    private fun setupAdapter(items: ArrayList<PostResponse>) {
+        adapter = RecyclerItemsAdapter(requireContext(), items)
+        binding.recyclerAllPosts.addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
+        binding.recyclerAllPosts.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.recyclerAllPosts.adapter = adapter
+    }
+
+    companion object {
+
+        @JvmStatic
+        fun newInstance() =
+            AllPostsFragment()
+    }
+}

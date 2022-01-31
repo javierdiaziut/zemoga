@@ -14,8 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ZemogaApp">
         <activity
+            android:name=".BaseActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.ZemogaApp.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
