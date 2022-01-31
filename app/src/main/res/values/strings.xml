@@ -10,4 +10,9 @@
     <string name="label_description">Description</string>
     <string name="label_user">User</string>
     <string name="label_comments">Comments</string>
+    <string name="format_user_name"><b>Name: </b> %s</string>
+    <string name="format_user_email"><b>Email: </b> %s</string>
+    <string name="format_user_phone"><b>Phone: </b> %s</string>
+    <string name="format_user_website"><b>Website: </b> %s</string>
+
 </resources>

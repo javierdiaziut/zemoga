@@ -2,10 +2,8 @@ package com.example.networking.di
 
 import com.example.networking.datasource.GetPostCommentsDataSource
 import com.example.networking.datasource.GetPostsDataSource
-import com.example.networking.usecase.GetPostCommentsInteractor
-import com.example.networking.usecase.GetPostCommentsUseCase
-import com.example.networking.usecase.GetPostInteractor
-import com.example.networking.usecase.GetPostsUseCase
+import com.example.networking.datasource.GetUserInfoDataSource
+import com.example.networking.usecase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,4 +26,11 @@ object UseCaseModule {
     fun provideGetPostCommentsUseCase(dataSource: GetPostCommentsDataSource): GetPostCommentsUseCase {
         return GetPostCommentsInteractor(dataSource)
     }
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetUserInfoUseCase(dataSource: GetUserInfoDataSource): GetUserInfoUseCase {
+        return GetUserInfoInteractor(dataSource)
+    }
+
 }

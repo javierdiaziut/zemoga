@@ -1,17 +1,15 @@
 package com.example.zemogaapp.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.domain.*
 import com.example.networking.utils.Result
 import com.example.zemogaapp.BaseActivity
+import com.example.zemogaapp.R
 import com.example.zemogaapp.databinding.ActivityPostDetailBinding
 import com.example.zemogaapp.ui.adapter.RecyclerCommentsAdapter
-import com.example.zemogaapp.ui.adapter.RecyclerItemsAdapter
 import com.example.zemogaapp.view_model.DetailPostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,10 +34,15 @@ class PostDetailActivity : BaseActivity() {
         initViews()
         currentPost?.let {
             viewModel.getPostComments(it.id)
+            viewModel.getUserInfo(it.userId)
         }
 
         viewModel.responseUi.observe(this, {
             handleResult(it)
+        })
+
+        viewModel.responseUserInfo.observe(this, {
+            handleResultUserInfo(it)
         })
 
     }
@@ -62,6 +65,52 @@ class PostDetailActivity : BaseActivity() {
             }
         }
 
+    }
+
+    private fun handleResultUserInfo(result: Result<UserInfoResponse>?) {
+        result?.let {
+            when (result) {
+                is Result.Success -> {
+                    val dataUser = result.data
+                    setupUserInfo(dataUser.toUI())
+                    dismissLoading()
+                }
+                is Result.Failure -> {
+                    dismissLoading()
+                }
+                is Result.Loading -> {
+                }
+            }
+        }
+    }
+
+    private fun setupUserInfo(userData : UserInfo){
+        binding.textName.text = String.format(
+            getString(
+                R.string.format_user_name,
+                userData.name
+            )
+        )
+        binding.textEmail.text = String.format(
+            getString(
+                R.string.format_user_email,
+                userData.email
+            )
+        )
+
+        binding.textPhone.text = String.format(
+            getString(
+                R.string.format_user_phone,
+                userData.phone
+            )
+        )
+
+        binding.textWebsite.text = String.format(
+            getString(
+                R.string.format_user_website,
+                userData.website
+            )
+        )
     }
 
     private fun setupAdapter(items: List<PostComment>) {
