@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class LocalPostsRepository @Inject constructor(private val appDatabase: AppDatabase) {
 
-    suspend fun insertAllPosts(post: List<PostItem>){
+    suspend fun insertAllPosts(post: List<PostItem>) {
 
         val list = post.map { it.toEntity() }
         return appDatabase.postDao()
@@ -18,6 +18,10 @@ class LocalPostsRepository @Inject constructor(private val appDatabase: AppDatab
 
     suspend fun deletePost(item: PostEntity) {
         appDatabase.postDao().deletePost(item)
+    }
+
+    suspend fun deleteAllPost() {
+        appDatabase.postDao().deleteAllPosts()
     }
 
     suspend fun updatePost(item: PostEntity) {

@@ -46,4 +46,16 @@ class LocalStorageViewModel @Inject constructor(private val dbRepository: LocalP
         }
     }
 
+    fun deleteALlPosts() {
+        viewModelScope.launch {
+            dbRepository.deleteAllPost()
+        }
+    }
+
+    fun deletePost(post: PostEntity) {
+        viewModelScope.launch {
+            dbRepository.deletePost(item = post)
+        }
+    }
+
 }

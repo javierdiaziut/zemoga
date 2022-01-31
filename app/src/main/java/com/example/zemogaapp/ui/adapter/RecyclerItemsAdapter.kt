@@ -11,7 +11,7 @@ import com.example.domain.PostItem
 import com.example.domain.PostResponse
 import com.example.zemogaapp.databinding.LayoutItemRecyclerBinding
 
-class RecyclerItemsAdapter(private val context: Context, var items: List<PostItem>) :
+class RecyclerItemsAdapter(private val context: Context, var items: MutableList<PostItem>) :
     ListAdapter<PostItem, RecyclerView.ViewHolder>(UserDiffCallBack()) {
 
     private var clickListener: PostClickListener? = null
@@ -65,9 +65,16 @@ class RecyclerItemsAdapter(private val context: Context, var items: List<PostIte
 
     interface PostClickListener {
         fun onPostItemClick(item : PostItem)
+        fun onRemoveItem(item : PostItem)
     }
 
     internal fun setClickListener(clickListener: PostClickListener) {
         this.clickListener = clickListener
+    }
+
+    fun removeAt(position: Int) {
+        clickListener?.onRemoveItem(item = items[position])
+        items.removeAt(position)
+        notifyItemRemoved(position)
     }
 }

@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.databasezemoga.entity.PostEntity
@@ -74,7 +75,7 @@ class AllPostsFragment : Fragment(), RecyclerItemsAdapter.PostClickListener {
 
     override fun onResume() {
         super.onResume()
-        (activity as MainActivity).showReloadToolbar { viewModel.getPosts() }
+        (activity as MainActivity).showReloadToolbar()
     }
 
     private fun handleResult(result: Result<List<PostResponse>>?) {
@@ -117,12 +118,30 @@ class AllPostsFragment : Fragment(), RecyclerItemsAdapter.PostClickListener {
     }
 
     private fun setupAdapter(items: List<PostItem>) {
-        adapter = RecyclerItemsAdapter(requireContext(), items)
+        adapter = RecyclerItemsAdapter(requireContext(), items.toMutableList())
         adapter.setClickListener(this)
         binding.recyclerAllPosts.addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
         binding.recyclerAllPosts.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerAllPosts.adapter = adapter
+
+        val itemTouchHelperCallback =
+            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    adapter.removeAt(viewHolder.adapterPosition)
+                }
+
+            }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerAllPosts)
     }
 
     override fun onPostItemClick(item: PostItem) {
@@ -130,6 +149,10 @@ class AllPostsFragment : Fragment(), RecyclerItemsAdapter.PostClickListener {
         val readPost = item.toEntity()
         localViewModel.updatePosts(readPost)
         findNavController().navigate(AllPostsFragmentDirections.actionAllPostsFragmentToPostDetailActivity(item))
+    }
+
+    override fun onRemoveItem(item: PostItem) {
+        localViewModel.deletePost(item.toEntity())
     }
 
     companion object {

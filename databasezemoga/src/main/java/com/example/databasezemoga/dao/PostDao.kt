@@ -17,7 +17,7 @@ interface PostDao {
     suspend fun updatePost(item: PostEntity)
 
     @Query("DELETE FROM post_table")
-    fun deleteAllPosts()
+    suspend fun deleteAllPosts()
 
     @Delete
     suspend fun deletePost(item: PostEntity)

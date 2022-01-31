@@ -1,22 +1,28 @@
 package com.example.zemogaapp.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import com.example.domain.PostResponse
-import com.example.networking.utils.Result
 import com.example.zemogaapp.BaseActivity
 import com.example.zemogaapp.R
 import com.example.zemogaapp.databinding.ActivityMainBinding
+import com.example.zemogaapp.view_model.LocalStorageViewModel
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
 
     private lateinit var binding: ActivityMainBinding
+    private val localViewModel: LocalStorageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +32,16 @@ class MainActivity : BaseActivity() {
 
         handleTabListeners()
         initToolbar()
+        handleDeleteAllPost()
+    }
+
+    private fun handleDeleteAllPost(){
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        binding.cardDeletePosts.setOnClickListener {
+            scope.launch {
+                localViewModel.deleteALlPosts()
+            }
+        }
     }
 
     private fun initToolbar(){
@@ -34,10 +50,10 @@ class MainActivity : BaseActivity() {
 
     }
 
-    fun showReloadToolbar(getNewData: () -> (Unit)){
+    fun showReloadToolbar(){
         binding.includedToolbar.icActionToolbar.visibility = View.VISIBLE
         binding.includedToolbar.icActionToolbar.setOnClickListener {
-            getNewData()
+            localViewModel.getLocalPosts()
         }
     }
 

@@ -9,8 +9,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.PostItem
+import com.example.domain.toEntity
 import com.example.domain.toUI
 import com.example.zemogaapp.BaseActivity
 import com.example.zemogaapp.databinding.FragmentFavoritePostsBinding
@@ -53,7 +56,7 @@ class FavoritePostsFragment : Fragment(), RecyclerItemsAdapter.PostClickListener
     }
 
     private fun setupAdapter(items: List<PostItem>) {
-        adapter = RecyclerItemsAdapter(requireContext(), items)
+        adapter = RecyclerItemsAdapter(requireContext(), items.toMutableList())
         adapter.setClickListener(this)
         binding.recyclerFavoritesPosts.addItemDecoration(
             DividerItemDecoration(
@@ -64,6 +67,24 @@ class FavoritePostsFragment : Fragment(), RecyclerItemsAdapter.PostClickListener
         binding.recyclerFavoritesPosts.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerFavoritesPosts.adapter = adapter
+
+        val itemTouchHelperCallback =
+            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    adapter.removeAt(viewHolder.adapterPosition)
+                }
+
+            }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerFavoritesPosts)
     }
 
     override fun onPostItemClick(item: PostItem) {
@@ -72,6 +93,10 @@ class FavoritePostsFragment : Fragment(), RecyclerItemsAdapter.PostClickListener
                 item
             )
         )
+    }
+
+    override fun onRemoveItem(item: PostItem) {
+        localViewModel.deletePost(item.toEntity())
     }
 
     companion object {
