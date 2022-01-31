@@ -75,7 +75,9 @@ class AllPostsFragment : Fragment(), RecyclerItemsAdapter.PostClickListener {
 
     override fun onResume() {
         super.onResume()
-        (activity as MainActivity).showReloadToolbar()
+        (activity as MainActivity).showReloadToolbar(){
+            localViewModel.getLocalPosts()
+        }
     }
 
     private fun handleResult(result: Result<List<PostResponse>>?) {

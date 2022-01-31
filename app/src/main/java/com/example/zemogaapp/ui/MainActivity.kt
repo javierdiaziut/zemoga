@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.example.zemogaapp.BaseActivity
 import com.example.zemogaapp.R
@@ -50,11 +49,11 @@ class MainActivity : BaseActivity() {
 
     }
 
-    fun showReloadToolbar(){
+    fun showReloadToolbar(reloadPosts: () -> (Unit)){
         binding.includedToolbar.icActionToolbar.visibility = View.VISIBLE
         binding.includedToolbar.icActionToolbar.setOnClickListener {
-            localViewModel.getLocalPosts()
-        }
+            reloadPosts()
+            }
     }
 
     fun hideReloadToolbar() {
